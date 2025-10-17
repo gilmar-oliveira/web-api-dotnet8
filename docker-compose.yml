@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: webapi-sqlserver
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=YourStrong@Passw0rd
+      - MSSQL_PID=Developer
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver-data:/var/opt/mssql
+    networks:
+      - webapi-network
+
+  mysql:
+    image: mysql:8.0
+    container_name: webapi-mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=YourPassword
+      - MYSQL_DATABASE=WebApiDb
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - webapi-network
+
+  postgres:
+    image: postgres:16
+    container_name: webapi-postgres
+    environment:
+      - POSTGRES_PASSWORD=YourPassword
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=WebApiDb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - webapi-network
+
+volumes:
+  sqlserver-data:
+  mysql-data:
+  postgres-data:
+
+networks:
+  webapi-network:
+    driver: bridge
